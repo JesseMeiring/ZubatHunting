@@ -44,16 +44,16 @@ function preload() {
 }
 
 function setup() {
-  let width = 600;
-  let height = 500;
+  let width = 600
+  let height = 500
   let shapeHeight = 48
   
   displayData = new DisplayData(false, false, true, 100)
   console.log(displayData)
   gameover = false
   
-  createCanvas(width, height);
-  background(220);
+  createCanvas(width, height)
+  background(220)
   
   logText = "Log"
   notificationMsg = `A trainer is in the cave. Make sure they don't escape without a fight!
@@ -71,16 +71,13 @@ ${windowWidth}`
   trainerObj.visible = false
   
   playerObj = new Player(netObj.playerSpawnSpace, playerSprite, 'assets/ZubatSprite.png')
-// createCanvas(400, 400)
-// background(220);
 }
 
 function draw() {
   background(220);
   
-  let logNote = ""
-  if(trainerMove) logNote = trainerObj.move
-  if(logNote != "") {
+  let logNote = trainerMove ? trainerObj.move : ""
+  if(logNote) {
     addToLog(logNote)    
     trainerMove = false
   }
@@ -93,17 +90,17 @@ function draw() {
 function mouseClicked() {
   if(gameover) return
   let cellClicked = netObj.clickAt()
-  if(cellClicked != null && cellClicked.type != 5) {
+  if(cellClicked && cellClicked.type != 5) {
     if(cellClicked.selected) {
-      if(netObj.withinTwoMovement(cellClicked, playerObj.tile)){
+      if(netObj.withinTwoMovement(cellClicked, playerObj.tile)) {
         playerObj.move(cellClicked)
-        if(playerObj.tile == trainerObj.tile) {
+        if(playerObj.tile === trainerObj.tile) {
           victory();
         } else {
           trainerMove = true
         }
       } else {
-        setNotificationMsg(`You can only move two spaces at a time. Sorry!`)
+        notificationMsg = `You can only move two spaces at a time. Sorry!`
       }
       netObj.clearSelected()
     } else {
@@ -112,68 +109,58 @@ function mouseClicked() {
       trainerMove = false
     }
   }
-  // if(mouseX > 0 && mouseY > 0 && mouseX < width && mouseY < height) {
-  //
-  // }
 }
 
 function showTileNames() {
   displayData.showLabels = !displayData.showLabels
-  if(displayData.showLabels) tileNameButton.innerText = "Hide Tile Names"
-  if(!displayData.showLabels) tileNameButton.innerText = "Show Tile Names"
+  tileNameButton.innerText = displayData.showLabels ? "Hide Tile Names" : "Show Tile Names"
+  
   trainerMove = false
 }
 
-function victory(){
+function endGame() {
+  trainerObj.visible = true
+  trainerMove = false
+  gameover = true
+}
+
+function victory() {
   addToLog("win")
-  trainerObj.visible = true
-  trainerMove = false
-  gameover = true
+  endGame();
 }
 
-function defeat(){
-  trainerObj.visible = true
-  trainerMove = false
-  gameover = true
-}
-
-function printLog(){
+function printLog() {
   textSize(15)
   noStroke()
   fill(0)
   text(logText, 425, 25)
 }
 
-function printNotification(){
+function printNotification() {
   textSize(15)
   noStroke()
   fill(0)
   text(notificationMsg, 15, 380)
 }
 
-function addToLog(m){
-  logText += `\nTurn ${turnCount}: ` + m
+function addToLog(message){
+  logText += `\nTurn ${turnCount}: ` + message
   turnCount++
-  switch(m){
-    case "Water": 
-      setNotificationMsg(`You hear some noise in the water!`)
-    break
-    case "Escaped":
-      setNotificationMsg(`The trainer escaped! Game over :/`)
-      defeat()
-    break
-    case "Rocky":
-      setNotificationMsg(`They've moved onto a rocky space`)
-    break
-    case "win":
-      setNotificationMsg(`Victory! But who has caught who?`)
-    break
-    default:
-      setNotificationMsg(`You hear a noise at ${m}!`)
-    break
-  }
+  notificationMsg = updateNotification(message);
 }
-  
-function setNotificationMsg(m){
-  notificationMsg = m
+
+function updateNotification(currentMessage) {
+  switch(currentMessage) {
+    case "Water": 
+      return `You hear some noise in the water!`
+    case "Escaped":
+      endGame()
+      return `The trainer escaped! Game over :/`
+    case "Rocky":
+      return `They've moved onto a rocky space`
+    case "win":
+      return `Victory! But who has caught who?`
+    default:
+      return `You hear a noise at ${m}!`
+  }
 }

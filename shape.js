@@ -4,7 +4,6 @@ class shape{
     this.center = createVector(xCenter, yCenter)
     this.angle = angle + PI / 4;
     this.type = type
-    // this.side = shapeHeight*1.1547;
     this.r = shapeHeight * Math.sqrt(2) / 2
     
     this.pointCount = 4
@@ -13,8 +12,8 @@ class shape{
     
     for(let pI = 0; pI<this.pointCount; pI++){
       this.points.push(createVector(
-        this.r * cos(this.angle + (pI/this.pointCount) * 2 * PI) + this.center.x,
-        this.r * sin(this.angle + (pI/this.pointCount) * 2 * PI) + this.center.y
+        this.r * this.calculateCos(pI),
+        this.r * this.calculateSin(pI)
       ))
     }    
     
@@ -22,8 +21,8 @@ class shape{
     
     for(let pI = 0; pI<this.pointCount; pI++){
       this.highlightPoints.push(createVector(
-        (this.r - 2) * cos(this.angle + (pI/this.pointCount) * 2 * PI) + this.center.x,
-        (this.r - 2) * sin(this.angle + (pI/this.pointCount) * 2 * PI) + this.center.y
+        (this.r - 2) * this.calculateCos(pI),
+        (this.r - 2) * this.calculateSin(pI)
       ))
     }
     
@@ -35,7 +34,16 @@ class shape{
     this.selected = false
   }
   
+  calculateCos(positionInitial) {
+    return cos(this.angle + (positionInitial/this.pointCount) * 2 * PI) + this.center.x;
+  }
+
+  calculateSin(positionInitial) {
+    return sin(this.angle + (positionInitial/this.pointCount) * 2 * PI) + this.center.y;
+  }
+
   drw(displayData){
+    //Why not just call drwshp?
     return this.drwshp(displayData);
   }
   
