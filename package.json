@@ -1,0 +1,23 @@
+{
+  "name": "zubathunting",
+  "version": "1.0.0",
+  "description": "Hidden Movement Pokemon Themed Game",
+  "main": "sketch.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JesseMeiring/ZubatHunting.git"
+  },
+  "author": "Jesse Meiring",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JesseMeiring/ZubatHunting/issues"
+  },
+  "homepage": "https://github.com/JesseMeiring/ZubatHunting#readme",
+  "dependencies": {
+    "@types/p5": "^1.7.0",
+    "p5": "^1.7.0"
+  }
+}

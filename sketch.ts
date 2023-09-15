@@ -8,28 +8,28 @@
 //Also animations
 //Make programatic level image generation for random levels
 //Make tileTypeEnum
+//2
 
 
 import { Net } from './net.js';
 import { Trainer } from './trainer.js';
-//import { Graphics, Image} from 'p5';
-import * as p5NameSpace from 'p5';
+import P5 from 'p5';
 import { Actor } from './actor.js';
 import { DisplayData } from './displayData.js';
 
-let sketch = function(p: p5NameSpace.Graphics){
+let sketch = function(p: P5.Graphics){
 
   let netObj: Net
   let trainerObj: Trainer
-  let trainerSprite: p5NameSpace.Image
+  let trainerSprite: P5.Image
   let trainerMove: boolean
   let playerObj: Actor
-  let playerSprite: p5NameSpace.Image
+  let playerSprite: P5.Image
   let gameover: boolean
   let notificationMsg: string
   let logText: string
   let turnCount: number
-  let levelImage: p5NameSpace.Image
+  let levelImage: P5.Image
   let displayData: DisplayData
 
   let tileNameButton = document.getElementById("tileNameButton")
@@ -190,4 +190,4 @@ let sketch = function(p: p5NameSpace.Graphics){
 }
 
 
-let p5Sketch: p5NameSpace = p5NameSpace(sketch);
+let p5Sketch: P5 = new P5(sketch);

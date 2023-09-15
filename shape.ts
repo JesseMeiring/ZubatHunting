@@ -1,5 +1,6 @@
 import {Vector, Image, Graphics} from 'p5'
 import { Actor } from './actor';
+import { DisplayData } from './displayData';
 //import * as p5 from 'p5'
 
 export class Shape{
@@ -50,18 +51,18 @@ export class Shape{
       }
       
       this.neighbors = []
-      this.distToSafe = null
+      this.distToSafe = 9999999 //This is bad but better than assigning null?
       this.column = ""
       this.row = ""
       this.actors = []
       this.selected = false
     }
     
-    drw(sketch: Graphics, displayData){
+    drw(sketch: Graphics, displayData: DisplayData){
       return this.drwshp(sketch, displayData);
     }
     
-    drwshp(sketch: Graphics, displayData){
+    drwshp(sketch: Graphics, displayData: DisplayData){
         sketch.noFill();
         sketch.stroke(220);
         sketch.strokeWeight(1)

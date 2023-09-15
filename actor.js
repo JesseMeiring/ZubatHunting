@@ -1,23 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Actor = void 0;
-class Actor {
-    constructor(startingTile, sprite, spritePath) {
+var Actor = /** @class */ (function () {
+    function Actor(startingTile, sprite, spritePath) {
         this.tile = startingTile;
         this.tile.actors.push(this);
         this.sprite = sprite;
         this.visible = true;
         this.spritePath = spritePath;
     }
-    move(tile) {
+    Actor.prototype.move = function (tile) {
         //remove self from old tile contents
-        const indexOfThis = this.tile.actors.indexOf(this);
+        var indexOfThis = this.tile.actors.indexOf(this);
         if (indexOfThis > -1)
             this.tile.actors.splice(indexOfThis, 1);
         //change this Trainers tile
         this.tile = tile;
         //Add self to tile contents
         this.tile.actors.push(this);
-    }
-}
+    };
+    return Actor;
+}());
 exports.Actor = Actor;
