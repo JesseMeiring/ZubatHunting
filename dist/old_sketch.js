@@ -1,4 +1,3 @@
-"use strict";
 //move to TypeScript
 // do not allow trainer to move onto player space
 //better mobile layout, 
@@ -10,33 +9,33 @@
 //Make programatic level image generation for random levels
 //Make tileTypeEnum
 //2
-Object.defineProperty(exports, "__esModule", { value: true });
-var net_js_1 = require("./net.js");
-var trainer_js_1 = require("./trainer.js");
-var p5_1 = require("p5");
-var actor_js_1 = require("./actor.js");
-var displayData_js_1 = require("./displayData.js");
-var sketch = function (p) {
-    var netObj;
-    var trainerObj;
-    var trainerSprite;
-    var trainerMove;
-    var playerObj;
-    var playerSprite;
-    var gameover;
-    var notificationMsg;
-    var logText;
-    var turnCount;
-    var levelImage;
-    var displayData;
-    var tileNameButton = document.getElementById("tileNameButton");
-    var W_SPACE = 0; //Water
-    var N_SPACE = 1; //Noisy
-    var S_SPACE = 2; //Safe
-    var T_SPACE = 3; //Trainer Start
-    var B_SPACE = 4; //Bat Start
-    var E_SPACE = 5; //Empty
-    var level1 = [
+import { Net } from './net';
+import { Trainer } from './trainer';
+import P5 from 'p5';
+import { Actor } from './actor';
+import { DisplayData } from './displayData';
+const containerElement = document.getElementById('p5-container');
+let sketch = function (p) {
+    let netObj;
+    let trainerObj;
+    let trainerSprite;
+    let trainerMove;
+    let playerObj;
+    let playerSprite;
+    let gameover;
+    let notificationMsg;
+    let logText;
+    let turnCount;
+    let levelImage;
+    let displayData;
+    let tileNameButton = document.getElementById("tileNameButton");
+    const W_SPACE = 0; //Water
+    const N_SPACE = 1; //Noisy
+    const S_SPACE = 2; //Safe
+    const T_SPACE = 3; //Trainer Start
+    const B_SPACE = 4; //Bat Start
+    const E_SPACE = 5; //Empty
+    const level1 = [
         [S_SPACE, B_SPACE, N_SPACE, N_SPACE, W_SPACE, W_SPACE, W_SPACE, N_SPACE],
         [N_SPACE, E_SPACE, E_SPACE, N_SPACE, N_SPACE, N_SPACE, W_SPACE, N_SPACE],
         [N_SPACE, N_SPACE, N_SPACE, N_SPACE, N_SPACE, E_SPACE, E_SPACE, N_SPACE],
@@ -45,30 +44,37 @@ var sketch = function (p) {
         [N_SPACE, N_SPACE, N_SPACE, N_SPACE, N_SPACE, N_SPACE, W_SPACE, T_SPACE],
     ];
     function preload() {
+        console.log("Preloading");
         trainerSprite = p.loadImage('assets/TrainerSpriteSmall.png');
         playerSprite = p.loadImage('assets/ZubatSprite.png');
         levelImage = p.loadImage('assets/ZubatCaveLevel2.png');
     }
     function setup() {
-        var width = 600;
-        var height = 500;
-        var shapeHeight = 48;
-        displayData = new displayData_js_1.DisplayData(false, false, true, 100);
+        console.log("Setting Up");
+        let width = 600;
+        let height = 500;
+        let shapeHeight = 48;
+        displayData = new DisplayData(false, false, true, 100);
         console.log(displayData);
         gameover = false;
         p.createCanvas(width, height);
         p.background(220);
         logText = "Log";
-        notificationMsg = "A trainer is in the cave. Make sure they don't escape without a fight!\n  Click a tile to select it. Click again to move there\n  After each move, the trainer moves. If they move onto a rocky space, \n  they may give away thier position\n  If they move onto water, they will make a splashing noise but \n  it's hard to know which water tile they moved onto";
+        notificationMsg = `A trainer is in the cave. Make sure they don't escape without a fight!
+  Click a tile to select it. Click again to move there
+  After each move, the trainer moves. If they move onto a rocky space, 
+  they may give away thier position
+  If they move onto water, they will make a splashing noise but 
+  it's hard to know which water tile they moved onto`;
         turnCount = 1;
-        netObj = new net_js_1.Net(shapeHeight, level1, levelImage);
-        trainerObj = new trainer_js_1.Trainer(netObj.trainerSpawnSpace, trainerSprite, 'assets/TrainerSprite.png');
+        netObj = new Net(shapeHeight, level1, levelImage);
+        trainerObj = new Trainer(netObj.trainerSpawnSpace, trainerSprite, 'assets/TrainerSprite.png');
         trainerObj.visible = false;
-        playerObj = new actor_js_1.Actor(netObj.playerSpawnSpace, playerSprite, 'assets/ZubatSprite.png');
+        playerObj = new Actor(netObj.playerSpawnSpace, playerSprite, 'assets/ZubatSprite.png');
     }
     function draw() {
         p.background(220);
-        var logNote = "";
+        let logNote = "";
         if (trainerMove)
             logNote = trainerObj.takeTurn;
         if (logNote != "") {
@@ -82,7 +88,7 @@ var sketch = function (p) {
     function mouseClicked() {
         if (gameover)
             return;
-        var cellClicked = netObj.clickAt(p);
+        let cellClicked = netObj.clickAt(p);
         if (cellClicked != null && cellClicked.type != 5) {
             if (cellClicked.selected) {
                 if (netObj.withinTwoMovement(cellClicked, playerObj.tile)) {
@@ -95,7 +101,7 @@ var sketch = function (p) {
                     }
                 }
                 else {
-                    setNotificationMsg("You can only move two spaces at a time. Sorry!");
+                    setNotificationMsg(`You can only move two spaces at a time. Sorry!`);
                 }
                 netObj.clearSelected();
             }
@@ -141,24 +147,24 @@ var sketch = function (p) {
         p.text(notificationMsg, 15, 380);
     }
     function addToLog(message) {
-        logText += "\nTurn ".concat(turnCount, ": ") + message;
+        logText += `\nTurn ${turnCount}: ` + message;
         turnCount++;
         switch (message) {
             case "Water":
-                setNotificationMsg("You hear some noise in the water!");
+                setNotificationMsg(`You hear some noise in the water!`);
                 break;
             case "Escaped":
-                setNotificationMsg("The trainer escaped! Game over :/");
+                setNotificationMsg(`The trainer escaped! Game over :/`);
                 defeat();
                 break;
             case "Rocky":
-                setNotificationMsg("They've moved onto a rocky space");
+                setNotificationMsg(`They've moved onto a rocky space`);
                 break;
             case "win":
-                setNotificationMsg("Victory! But who has caught who?");
+                setNotificationMsg(`Victory! But who has caught who?`);
                 break;
             default:
-                setNotificationMsg("You hear a noise at ".concat(message, "!"));
+                setNotificationMsg(`You hear a noise at ${message}!`);
                 break;
         }
     }
@@ -166,4 +172,6 @@ var sketch = function (p) {
         notificationMsg = Message;
     }
 };
-var p5Sketch = new p5_1.default(sketch);
+console.log("F");
+//let p5Sketch: P5 = new P5(sketch);
+new P5(sketch, containerElement);

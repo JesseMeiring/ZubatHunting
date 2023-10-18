@@ -1,3 +1,6 @@
+/// <reference path="../typings/p5-global.d.ts" />
+import type p5 from "p5";
+
 import {Vector, Image, Graphics} from 'p5'
 import { Actor } from './actor';
 import { DisplayData } from './displayData';
@@ -58,11 +61,11 @@ export class Shape{
       this.selected = false
     }
     
-    drw(sketch: Graphics, displayData: DisplayData){
+    drw(sketch: p5, displayData: DisplayData){
       return this.drwshp(sketch, displayData);
     }
     
-    drwshp(sketch: Graphics, displayData: DisplayData){
+    drwshp(sketch: p5, displayData: DisplayData){
         sketch.noFill();
         sketch.stroke(220);
         sketch.strokeWeight(1)

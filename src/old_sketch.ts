@@ -11,13 +11,15 @@
 //2
 
 
-import { Net } from './net.js';
-import { Trainer } from './trainer.js';
+import { Net } from './net';
+import { Trainer } from './trainer';
 import P5 from 'p5';
-import { Actor } from './actor.js';
-import { DisplayData } from './displayData.js';
+import { Actor } from './actor';
+import { DisplayData } from './displayData';
 
-let sketch = function(p: P5.Graphics){
+const containerElement = document.getElementById('p5-container')!;
+
+let sketch = function(p: P5){
 
   let netObj: Net
   let trainerObj: Trainer
@@ -51,12 +53,14 @@ let sketch = function(p: P5.Graphics){
   ]
 
   function preload() {
+    console.log("Preloading");
     trainerSprite = p.loadImage('assets/TrainerSpriteSmall.png')
     playerSprite = p.loadImage('assets/ZubatSprite.png')
     levelImage = p.loadImage('assets/ZubatCaveLevel2.png')
   }
 
   function setup() {
+    console.log("Setting Up");
     let width = 600;
     let height = 500;
     let shapeHeight = 48
@@ -189,5 +193,6 @@ let sketch = function(p: P5.Graphics){
   }
 }
 
-
-let p5Sketch: P5 = new P5(sketch);
+console.log("F");
+//let p5Sketch: P5 = new P5(sketch);
+new P5(sketch, containerElement);

@@ -1,3 +1,6 @@
+/// <reference path="../typings/p5-global.d.ts" />
+import type p5 from "p5";
+
 import { Shape } from "./shape";
 import { Image, Graphics } from "p5";
 import { DisplayData } from "./displayData";
@@ -15,11 +18,11 @@ export class Net{
     this.sprite = levelMapImage
   }
   
-  drw(sketch: Graphics, displayData: DisplayData){
+  drw(sketch: p5, displayData: DisplayData){
     return this.drwshp(sketch, displayData);
   }
   
-  drwshp(sketch: Graphics, displayData: DisplayData){
+  drwshp(sketch: p5, displayData: DisplayData){
     //draw Map Sprite
     sketch.image(this.sprite, 0 , 0)
     
@@ -100,7 +103,7 @@ export class Net{
     return !tooLeft &&!tooRight &&!tooHigh &&!tooLow
   }
   
-  clickAt(sketch: Graphics){
+  clickAt(sketch: p5){
     let mx = sketch.mouseX
     let my = sketch.mouseY
     //console.log(`mx: ${mx}, my: ${my}`)
