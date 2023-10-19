@@ -1,0 +1,17 @@
+import { spaceTypes } from "./spaceTypes";
+
+let S_SPACE = spaceTypes.SAFE;
+let B_SPACE = spaceTypes.ZUBAT_SPAWN;
+let N_SPACE = spaceTypes.NOISY;
+let W_SPACE = spaceTypes.WATER;
+let E_SPACE = spaceTypes.EMPTY;
+let T_SPACE = spaceTypes.TRAINER_SPAWN;
+
+export let level1: spaceTypes[][] = [
+  [S_SPACE, B_SPACE, N_SPACE, N_SPACE, W_SPACE, W_SPACE, W_SPACE, N_SPACE],
+  [N_SPACE, E_SPACE, E_SPACE, N_SPACE, N_SPACE, N_SPACE, W_SPACE, N_SPACE],
+  [N_SPACE, N_SPACE, N_SPACE, N_SPACE, N_SPACE, E_SPACE, E_SPACE, N_SPACE],
+  [W_SPACE, E_SPACE, W_SPACE, E_SPACE, W_SPACE, E_SPACE, E_SPACE, N_SPACE],
+  [N_SPACE, E_SPACE, N_SPACE, E_SPACE, N_SPACE, N_SPACE, W_SPACE, N_SPACE],
+  [N_SPACE, N_SPACE, N_SPACE, N_SPACE, N_SPACE, N_SPACE, W_SPACE, T_SPACE],
+];

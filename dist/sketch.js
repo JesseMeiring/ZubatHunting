@@ -18,12 +18,12 @@ export default function sketch(p) {
     let tileNameButton = document.getElementById("tileNameButton");
     const W_SPACE = 0; //Water
     const N_SPACE = 1; //Noisy
-    const S_SPACE = 2; //Safe
+    const spaceTypes.SAFE = 2; //Safe
     const T_SPACE = 3; //Trainer Start
-    const B_SPACE = 4; //Bat Start
+    const spaceTypes.ZUBAT_SPAWN = 4; //Bat Start
     const E_SPACE = 5; //Empty
     const level1 = [
-        [S_SPACE, B_SPACE, N_SPACE, N_SPACE, W_SPACE, W_SPACE, W_SPACE, N_SPACE],
+        [spaceTypes.SAFE, spaceTypes.ZUBAT_SPAWN, N_SPACE, N_SPACE, W_SPACE, W_SPACE, W_SPACE, N_SPACE],
         [N_SPACE, E_SPACE, E_SPACE, N_SPACE, N_SPACE, N_SPACE, W_SPACE, N_SPACE],
         [N_SPACE, N_SPACE, N_SPACE, N_SPACE, N_SPACE, E_SPACE, E_SPACE, N_SPACE],
         [W_SPACE, E_SPACE, W_SPACE, E_SPACE, W_SPACE, E_SPACE, E_SPACE, N_SPACE],
