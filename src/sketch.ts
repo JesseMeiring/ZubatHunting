@@ -1,4 +1,5 @@
 import type p5 from "p5";
+import { Element } from "p5";
 import { Game } from "./game";
 import { level1 } from "./level1";
 
@@ -12,7 +13,9 @@ let gameController: Game;
 export default function sketch(p: p5) {
   let tileNameButton = document.getElementById("tileNameButton");
 
-  gameController = new Game(p, level1);
+  let canvasParent: HTMLElement = document.getElementById('canvas') as HTMLElement;
+  console.log(canvasParent);
+  gameController = new Game(p, level1, canvasParent);
 
   p.preload = preload;
   p.setup = setup;
@@ -34,4 +37,5 @@ function draw(this: p5x) {
 
 function mousePressed(this: p5x) {
   gameController.mapPressed(this);
+  console.log(this.windowWidth);
 }

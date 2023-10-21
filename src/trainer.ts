@@ -8,7 +8,7 @@ export class Trainer extends Actor {
   progress: number;
 
   constructor(startingTile: Shape, sprite: Image, spritePath: String) {
-    super(startingTile, sprite, spritePath);
+    super(startingTile, sprite, spritePath, "Trainer");
 
     this.timesStealthed = 0;
     this.progress = 0;
@@ -30,11 +30,11 @@ export class Trainer extends Actor {
 
     //place all tiles into the appropiate array based on thier distance to the end
     for (let n of this.tile.neighbors) {
-      if (this.tile.distToSafe > n.distToSafe && n.type != 5)
+      if (this.tile.distToSafe > n.distToSafe && this.spaceSafeToMoveTo(n))
         closerTiles.push(n);
-      if (this.tile.distToSafe == n.distToSafe && n.type != 5)
+      if (this.tile.distToSafe == n.distToSafe && this.spaceSafeToMoveTo(n))
         sameDistTiles.push(n);
-      if (this.tile.distToSafe < n.distToSafe && n.type != 5)
+      if (this.tile.distToSafe < n.distToSafe && this.spaceSafeToMoveTo(n))
         backStepTiles.push(n);
     }
 
@@ -96,6 +96,13 @@ export class Trainer extends Actor {
     }
     //If no direction can be found (only if there are no neighbors)
     return null;
+  }
+
+  spaceSafeToMoveTo(s: Shape){
+    if(s.type === spaceTypes.EMPTY) return false;
+    if(s.type === spaceTypes.SAFE) return true;
+    if(s.actors.filter(e => e.type === "Zubat").length > 0) return false;
+    return true;
   }
 
   makeNoise() {

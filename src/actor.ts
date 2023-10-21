@@ -6,13 +6,20 @@ export class Actor {
   sprite: Image;
   visible: boolean;
   spritePath: String;
+  type: string;
 
-  constructor(startingTile: Shape, sprite: Image, spritePath: String) {
+  constructor(
+    startingTile: Shape,
+    sprite: Image,
+    spritePath: String,
+    type: string
+  ) {
     this.tile = startingTile;
     this.tile.actors.push(this);
     this.sprite = sprite;
     this.visible = true;
     this.spritePath = spritePath;
+    this.type = type;
   }
 
   move(tile: Shape) {
