@@ -6,8 +6,8 @@ import { Actor } from "./actor";
 import { DisplayData } from "./displayData";
 //import * as p5 from 'p5'
 
-export class Shape {
-  shapeHeight: number;
+export class Space {
+  spaceHeight: number;
   center: Vector;
   angle: number;
   type: number;
@@ -15,7 +15,7 @@ export class Shape {
   pointCount: number;
   points: Vector[];
   highlightPoints: Vector[];
-  neighbors: Shape[];
+  neighbors: Space[];
   distToSafe: number;
   column: string;
   row: string;
@@ -29,7 +29,7 @@ export class Shape {
     angle: number,
     type: number
   ) {
-    this.shapeHeight = shapeHeight;
+    this.spaceHeight = shapeHeight;
     this.center = new Vector(xCenter, yCenter);
     this.angle = angle + Math.PI / 4;
     this.type = type;
@@ -154,7 +154,7 @@ export class Shape {
       let newSprite = s.sprite.get();
       newSprite.resize(
         0,
-        ((this.shapeHeight * 0.8) / Math.sqrt(visibleSpriteCount)) *
+        ((this.spaceHeight * 0.8) / Math.sqrt(visibleSpriteCount)) *
           spriteScaleFactor
       );
       sketch.image(
@@ -174,11 +174,11 @@ export class Shape {
       // } else {
       //   fill('black')
       // }
-      sketch.textSize(this.shapeHeight / 3);
+      sketch.textSize(this.spaceHeight / 3);
       sketch.text(
         this.label,
-        this.center.x - this.shapeHeight / 6,
-        this.center.y + this.shapeHeight / 12
+        this.center.x - this.spaceHeight / 6,
+        this.center.y + this.spaceHeight / 12
       );
     }
   }

@@ -1,0 +1,6 @@
+export enum appState {
+  STATE_MAINMENU,
+  STATE_PLAYING, 
+  STATE_GAMEOVER,
+  STATE_TUTORIAL,
+}

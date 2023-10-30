@@ -4,23 +4,19 @@ import { Image, Renderer } from "p5";
 
 import { Space } from "./space";
 import { Actor } from "./actor";
-import { Map as Map } from "./map";
+import { Map } from "./map";
 import { Trainer } from "./trainer";
 import { DisplayData } from "./displayData";
 import { spaceTypes } from "./spaceTypes";
 import { p5x } from "./sketch";
+import { Game } from "./game";
+import { appState } from "./stateEnums";
 
-export class Game {
+export class DisplayManager {
   width: number = 600;
   height: number = 520;
   shapeHeight: number = 48;
-  mapObj: Map;
-  trainerObj: Trainer;
-  playerObj: Actor;
   displayData: DisplayData;
-  gameover: boolean;
-  turnCount: number;
-  trainerMove: boolean = false;
   logText: string = `Log`;
   notificationMsg: string = `A trainer is in the cave. Make sure they don't escape without a fight!
     Click a tile to select it. Click again to move there
@@ -32,37 +28,20 @@ export class Game {
   canvas: p5.Renderer;
   verticalDisplay: boolean = false;
   parentElement: HTMLElement;
+  state: appState = appState.STATE_PLAYING;
+  gameInstance: Game;
 
   constructor(p: p5, parentElement: HTMLElement) {
     this.p5Instance = p;
     this.displayData = new DisplayData(false, false, false, 100);
-    this.gameover = false;
-    this.turnCount = 1;
-    this.mapObj = new Map(this.shapeHeight);
-    this.trainerObj = new Trainer(
-      this.mapObj.trainerSpawnSpace,
-      new Image(1, 1),
-      "assets/TrainerSpriteSmall.png"
-    );
-    this.playerObj = new Actor(
-      this.mapObj.playerSpawnSpace,
-      new Image(1, 1),
-      "assets/ZubatSprite.png",
-      "Zubat"
-    );
     this.canvas = new Renderer(parentElement, p, true);
     this.parentElement = parentElement;
-  }
-
-  loadImages(p: p5) {
-    this.mapObj.sprite = p.loadImage("assets/ZubatCaveLevel2.png");
-    this.trainerObj.sprite = p.loadImage("assets/TrainerSpriteSmall.png");
-    this.playerObj.sprite = p.loadImage("assets/ZubatSprite.png");
+    this.gameInstance = new Game(this.p5Instance, parentElement);
   }
 
   intializeCanvas(p: p5) {
     this.canvas = p.createCanvas(this.width, this.height);
-    this.resizeToWindow(p);
+    this.resizeToWindow(this.gameInstance);
 
     // Move the canvas so it’s inside our <div id="canvas">.
     this.canvas.parent("canvas");
@@ -70,67 +49,53 @@ export class Game {
     p.background(220);
   }
 
-  resizeToWindow(p: p5){
-    if(p.windowWidth > 600){
+  setupGame(gameInstance: Game) {
+    this.gameInstance;
+  }
+
+  resizeToWindow(gameInstance: Game) {
+    if (this.p5Instance.windowWidth >= 600) {
       this.width = 600;
       this.verticalDisplay = false;
     } else {
-      this.width = this.mapObj.sprite.width;
+      this.width = gameInstance.mapObj.sprite.width;
       this.verticalDisplay = true;
     }
-    p.resizeCanvas(this.width, this.height);
+    this.p5Instance.resizeCanvas(this.width, this.height);
   }
 
-  drw(p: p5) {
-    this.resizeToWindow(p);
-    p.background(220);
+  drw(gameInstance: Game) {
+    this.resizeToWindow(gameInstance);
+    this.p5Instance.background(220);
 
     let logNote = "";
-    if (this.trainerMove) logNote = this.trainerObj.takeTurn;
+    if (gameInstance.trainerMove) logNote = gameInstance.trainerObj.takeTurn;
     if (logNote != "") {
       this.addToLog(logNote);
-      this.trainerMove = false;
+      gameInstance.trainerMove = false;
     }
     this.printLog();
     this.printNotification();
-    this.mapObj.drw(p, this.displayData);
+    gameInstance.mapObj.drw(this.p5Instance, this.displayData);
   }
 
-  mapPressed(p: p5) {
-    if (!this.gameover) {
-      let cellClicked = this.mapObj.clickAt(p.mouseX, p.mouseY);
-      if (cellClicked && cellClicked.type != 5) {
-        if (cellClicked.selected) {
-          if (this.mapObj.withinTwoMovement(cellClicked, this.playerObj.tile)) {
-            this.playerObj.move(cellClicked);
-            if (this.playerObj.tile == this.trainerObj.tile) {
-              this.gameEnd(true);
-            } else {
-              this.trainerMove = true;
-            }
-          } else {
-            this.notificationMsg = `You can only move two spaces at a time. Sorry!`;
-          }
-          this.mapObj.clearSelected();
-        } else {
-          this.mapObj.clearSelected();
-          cellClicked.selected = true;
-          this.trainerMove = false;
-        }
-      }
+  mousePressed() {
+    let mx = this.p5Instance.mouseX;
+    let my = this.p5Instance.mouseY;
+    if (this.state === appState.STATE_PLAYING) {
+      this.gameInstance.mapPressed(this.p5Instance);
+    } else if (this.state === appState.STATE_MAINMENU) {
     }
   }
 
   gameEnd(victory: boolean) {
     if (victory) this.addToLog("win");
-    this.trainerObj.visible = true;
-    this.trainerMove = false;
-    this.gameover = true;
+    this.state = appState.STATE_GAMEOVER;
   }
 
   addToLog(message: string) {
-    this.logText += `\nTurn ${this.turnCount}: ` + message;
-    this.turnCount++;
+    this.logText += `\nTurn ${this.gameInstance.turnCount}: ` + message;
+    this.gameInstance.turnCount++;
     switch (message) {
       case "Water":
         this.notificationMsg = `You hear some noise in the water!`;
@@ -150,14 +115,14 @@ export class Game {
         break;
     }
     let lines = this.logText.split("\n");
-    if(lines.length > 8) lines.splice(1, 1);
+    if (lines.length > 8) lines.splice(1, 1);
     this.logText = lines.join("\n");
   }
 
   printLog() {
     this.p5Instance.noStroke();
     this.p5Instance.fill(0);
-    if(this.verticalDisplay) {
+    if (this.verticalDisplay) {
       this.p5Instance.textSize(12);
       let NotifiationAndLog = this.logText + "\n" + this.notificationMsg;
       this.p5Instance.text(NotifiationAndLog, 15, 380);
@@ -171,7 +136,7 @@ export class Game {
     this.p5Instance.textSize(15);
     this.p5Instance.noStroke();
     this.p5Instance.fill(0);
-    if(this.verticalDisplay){
+    if (this.verticalDisplay) {
       // this.p5Instance.textSize(12);
       // this.p5Instance.text(this.notificationMsg, 15, 380);
     } else {
@@ -184,6 +149,5 @@ export class Game {
     this.displayData.showLabels = !this.displayData.showLabels;
     // if(tileNameButton && displayData.showLabels) tileNameButton.innerText = "Hide Tile Names"
     // if(tileNameButton && !displayData.showLabels) tileNameButton.innerText = "Show Tile Names"
-    this.trainerMove = false;
   }
 }

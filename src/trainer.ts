@@ -1,13 +1,13 @@
 import { Actor } from "./actor";
 import { Image } from "p5";
-import { Shape } from "./shape";
+import { Space } from "./space";
 import { spaceTypes } from "./spaceTypes";
 
 export class Trainer extends Actor {
   timesStealthed: number;
   progress: number;
 
-  constructor(startingTile: Shape, sprite: Image, spritePath: String) {
+  constructor(startingTile: Space, sprite: Image, spritePath: String) {
     super(startingTile, sprite, spritePath, "Trainer");
 
     this.timesStealthed = 0;
@@ -98,10 +98,10 @@ export class Trainer extends Actor {
     return null;
   }
 
-  spaceSafeToMoveTo(s: Shape){
-    if(s.type === spaceTypes.EMPTY) return false;
-    if(s.type === spaceTypes.SAFE) return true;
-    if(s.actors.filter(e => e.type === "Zubat").length > 0) return false;
+  spaceSafeToMoveTo(s: Space) {
+    if (s.type === spaceTypes.EMPTY) return false;
+    if (s.type === spaceTypes.SAFE) return true;
+    if (s.actors.filter((e) => e.type === "Zubat").length > 0) return false;
     return true;
   }
 

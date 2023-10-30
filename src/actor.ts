@@ -1,15 +1,15 @@
 import { Image } from "p5";
-import { Shape } from "./shape";
+import { Space } from "./space";
 
 export class Actor {
-  tile: Shape;
+  tile: Space;
   sprite: Image;
   visible: boolean;
   spritePath: String;
   type: string;
 
   constructor(
-    startingTile: Shape,
+    startingTile: Space,
     sprite: Image,
     spritePath: String,
     type: string
@@ -22,7 +22,7 @@ export class Actor {
     this.type = type;
   }
 
-  move(tile: Shape) {
+  move(tile: Space) {
     //remove self from old tile contents
     const indexOfThis = this.tile.actors.indexOf(this);
     if (indexOfThis > -1) this.tile.actors.splice(indexOfThis, 1);

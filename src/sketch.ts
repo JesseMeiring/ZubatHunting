@@ -1,7 +1,7 @@
 import type p5 from "p5";
 import { Element } from "p5";
 import { Game } from "./game";
-import { level1 } from "./level1";
+import { level1 } from "./levelData";
 
 export type p5x = p5 & {
   font: p5.Font;
@@ -15,7 +15,7 @@ export default function sketch(p: p5) {
 
   let canvasParent: HTMLElement = document.getElementById('canvas') as HTMLElement;
   console.log(canvasParent);
-  gameController = new Game(p, level1, canvasParent);
+  gameController = new Game(p, canvasParent);
 
   p.preload = preload;
   p.setup = setup;

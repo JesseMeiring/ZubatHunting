@@ -1,25 +1,25 @@
 /// <reference path="../typings/p5-global.d.ts" />
 import type p5 from "p5";
 
-import { Shape } from "./shape";
+import { Space } from "./space";
 import { Image, Graphics } from "p5";
 import { DisplayData } from "./displayData";
 
-export class Net {
+export class Map {
   shapeHeight: number;
-  shapes: Shape[][];
-  sprite: Image;
+  shapes: Space[][];
+  sprite: Image = new Image(1, 1);
 
   constructor(
     shapeHeight: number,
-    levelMapArr: number[][],
-    levelMapImage: Image
+    // levelMapArr: number[][],
+    // levelMapImage: Image
   ) {
     this.shapeHeight = shapeHeight;
     this.shapes = [];
 
-    this.buildNet(levelMapArr);
-    this.sprite = levelMapImage;
+    // this.buildNet(levelMapArr);
+    // this.sprite = levelMapImage;
   }
 
   drw(sketch: p5, displayData: DisplayData) {
@@ -47,26 +47,23 @@ export class Net {
       let thisX = posX;
       for (let j = 0; j < levelMapArr.length; j++) {
         let cellType = levelMapArr[j][i];
-        let cell = new Shape(this.shapeHeight, thisX, posY, rotation, cellType);
+        let cell = new Space(this.shapeHeight, thisX, posY, rotation, cellType);
         cell.column = this.columnLabel(i);
         cell.row = (j + 1).toString();
         colOfShapes.push(cell);
-        posY += this.shapeHeight; // / 0.866
+        posY += this.shapeHeight;
       }
       this.shapes.push(colOfShapes);
       posX += this.shapeHeight * 1;
-      //initialY = this.shapeHeight / 0.866 / 2
       posY = initialY;
-      //offset even columns for Hex/Triangle grids
-      //if(i % 2 == 0) posY += this.shapeHeight / 2 / 0.866
     }
     this.linkNeighborCells();
   }
 
   linkNeighborCells() {
-    let offRowIndecies = [0]; //[-0, 1]
-    let sameRowIndecies = [-1, 1]; //[-2, -1, 1, 2]
-    let onRowIndecies = [0]; //[-1, 0] //[-2, -1, 0, 1, 2]
+    let offRowIndecies = [0];
+    let sameRowIndecies = [-1, 1];
+    let onRowIndecies = [0];
     for (let j = 0; j < this.shapes.length; j++) {
       for (let i = 0; i < this.shapes[j].length; i++) {
         let indexShape = this.shapes[j][i];
@@ -146,7 +143,7 @@ export class Net {
     }
   }
 
-  propogateSafeDistance(tile: Shape) {
+  propogateSafeDistance(tile: Space) {
     for (let n of tile.neighbors) {
       if (n.type != 5) {
         if (n.distToSafe == null || n.distToSafe > tile.distToSafe + 1) {
@@ -221,7 +218,7 @@ export class Net {
   //     }
   //   }
 
-  withinTwoMovement(firstTile: Shape, secondTile: Shape) {
+  withinTwoMovement(firstTile: Space, secondTile: Space) {
     for (let n1 of firstTile.neighbors.filter((n) => n.type != 5)) {
       if (n1 == secondTile) return true;
       for (let n2 of secondTile.neighbors.filter((n) => n.type != 5)) {
